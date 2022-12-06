@@ -227,7 +227,9 @@ fn get_answer_to_day_three() -> i32
     }
     return sum_of_score;
 }
-fn is_contained(left: &String, right: &String ) -> bool
+
+#[allow(dead_code)]
+fn is_fully_contained(left: &String, right: &String ) -> bool
 {
     let left_splitted = left.split("-").collect::<Vec<&str>>();
     let right_splitted = right.split("-").collect::<Vec<&str>>();
@@ -249,6 +251,28 @@ fn is_contained(left: &String, right: &String ) -> bool
     // println!("Right: {}, {}", r_start, r_stop);
     return ret_val;
 }
+#[allow(dead_code)]
+fn has_overlapping_elements(left: &String, right: &String ) -> bool
+{
+    let left_splitted = left.split("-").collect::<Vec<&str>>();
+    let right_splitted = right.split("-").collect::<Vec<&str>>();
+    let l_start = left_splitted[0].parse::<i32>().unwrap();
+    let l_stop = left_splitted[1].parse::<i32>().unwrap();
+    let r_start = right_splitted[0].parse::<i32>().unwrap();
+    let r_stop = right_splitted[1].parse::<i32>().unwrap();
+    let mut ret_val = false;
+    let a = l_start .. l_stop + 1;
+    let b = r_start .. r_stop + 1;
+    for ele in a
+    {
+        if b.contains(&ele)
+        {
+            ret_val = true;
+            break;
+        }
+    }
+    return ret_val;
+}
 
 #[allow(dead_code)]
 fn get_answer_to_day_four() -> i32
@@ -263,7 +287,7 @@ fn get_answer_to_day_four() -> i32
         let splitted_line = line_str.split(",").collect::<Vec<&str>>();
         let left = splitted_line[0];
         let right = splitted_line[1];
-        if is_contained(&left.to_string(), &right.to_string())
+        if has_overlapping_elements(&left.to_string(), &right.to_string())
         {
             counter = counter + 1;
         }
