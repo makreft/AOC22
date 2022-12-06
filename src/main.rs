@@ -41,6 +41,7 @@ fn get_answer_to_day_one() -> i32
 }
 
 #[derive(Debug, Copy, Clone)]
+#[allow(dead_code)]
 enum RPS
 {
     Rock=1,
@@ -49,6 +50,7 @@ enum RPS
     Default=99
 }
 
+#[allow(dead_code)]
 impl RPS 
 {
     fn from_i32(value: i32) -> RPS 
@@ -62,6 +64,7 @@ impl RPS
     }
 }
 
+#[allow(dead_code)]
 fn convert_input_to_score(oponent: &String, me: &String) -> i32
 {
     let look_up_table = vec![("A".to_string(), "X".to_string(), RPS::Rock),
@@ -134,6 +137,7 @@ fn convert_input_to_score(oponent: &String, me: &String) -> i32
     }
 }
 
+#[allow(dead_code)]
 fn get_answer_to_day_two() -> i32
 {
     let filename = "input/level2.txt";
@@ -149,6 +153,7 @@ fn get_answer_to_day_two() -> i32
     return sum_of_score;
 }
 
+#[allow(dead_code)]
 fn get_count_of_compartments(compartment_a: &String, compartment_b: &String) -> i32
 {
     let a: Vec<_> = compartment_a.chars().collect();
@@ -172,6 +177,7 @@ fn get_count_of_compartments(compartment_a: &String, compartment_b: &String) -> 
     return ret_val;
 }
 
+#[allow(dead_code)]
 fn get_count_of_grouped_backpacks(backpack_a: &String, backpack_b: &String, backpack_c: &String) -> i32
 {
     let a: Vec<_> = backpack_a.chars().collect();
@@ -199,6 +205,7 @@ fn get_count_of_grouped_backpacks(backpack_a: &String, backpack_b: &String, back
     return ret_val;
 }
 
+#[allow(dead_code)]
 fn get_answer_to_day_three() -> i32
 {
     let filename = "input/level3.txt";
@@ -220,11 +227,56 @@ fn get_answer_to_day_three() -> i32
     }
     return sum_of_score;
 }
+fn is_contained(left: &String, right: &String ) -> bool
+{
+    let left_splitted = left.split("-").collect::<Vec<&str>>();
+    let right_splitted = right.split("-").collect::<Vec<&str>>();
+    let l_start = left_splitted[0].parse::<i32>().unwrap();
+    let l_stop = left_splitted[1].parse::<i32>().unwrap();
+    let r_start = right_splitted[0].parse::<i32>().unwrap();
+    let r_stop = right_splitted[1].parse::<i32>().unwrap();
+    let mut ret_val = false;
+
+    if l_start <= r_start && l_stop >= r_stop
+    {
+        ret_val = true;
+    }
+    else if r_start <= l_start && r_stop >= l_stop
+    {
+        ret_val = true;
+    }
+    // println!("Left: {}, {}", l_start, l_stop);
+    // println!("Right: {}, {}", r_start, r_stop);
+    return ret_val;
+}
+
+#[allow(dead_code)]
+fn get_answer_to_day_four() -> i32
+{
+    let filename = "input/level4.txt";
+    let file = File::open(filename).unwrap();
+    let reader = BufReader::new(file);
+    let mut counter = 0;
+    for(_, line) in reader.lines().enumerate()
+    {
+        let line_str = line.unwrap();
+        let splitted_line = line_str.split(",").collect::<Vec<&str>>();
+        let left = splitted_line[0];
+        let right = splitted_line[1];
+        if is_contained(&left.to_string(), &right.to_string())
+        {
+            counter = counter + 1;
+        }
+    }
+
+    return counter;
+}
 
 fn main() 
 {
     // print!("{}", get_answer_to_day_one());
-    //println!("{}", get_answer_to_day_two());
-    println!("{}", get_answer_to_day_three());
+    // println!("{}", get_answer_to_day_two());
+    // println!("{}", get_answer_to_day_three());
+    println!("{}", get_answer_to_day_four());
 }
 
