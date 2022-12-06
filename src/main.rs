@@ -172,24 +172,57 @@ fn get_count_of_compartments(compartment_a: &String, compartment_b: &String) -> 
     return ret_val;
 }
 
+fn get_count_of_grouped_backpacks(backpack_a: &String, backpack_b: &String, backpack_c: &String) -> i32
+{
+    let a: Vec<_> = backpack_a.chars().collect();
+    let b: Vec<_> = backpack_b.chars().collect();
+
+    let mut ret_val: i32 = 0;
+
+    for ele_a in &a
+    {
+        for ele_b in &b
+        {
+            if backpack_c.contains(*ele_a) && backpack_c.contains(*ele_b) && *ele_a == *ele_b
+            {
+                if ele_a.is_uppercase()
+                {
+                    ret_val = *ele_a as i32 - 38;
+                }
+                else
+                {
+                    ret_val = *ele_b as i32 - 96;
+                }
+            }
+        }
+    }
+    return ret_val;
+}
+
 fn get_answer_to_day_three() -> i32
 {
     let filename = "input/level3.txt";
     let file = File::open(filename).unwrap();
     let reader = BufReader::new(file);
+
     let mut sum_of_score = 0;
+    let mut vec_of_three_backpacks: Vec<String> = Vec::with_capacity(3);
+
     for(_, line) in reader.lines().enumerate()
     {
         let line_str = line.unwrap();
-        let line_splitted = line_str.split_at((line_str.len()/2));
-        let compartment_a = line_splitted.0;
-        let compartment_b = line_splitted.1;
-        sum_of_score = sum_of_score + get_count_of_compartments(&compartment_a.to_string(), &compartment_b.to_string());
+        vec_of_three_backpacks.push(line_str);
+        if vec_of_three_backpacks.len() == vec_of_three_backpacks.capacity()
+        {
+            sum_of_score = sum_of_score + get_count_of_grouped_backpacks(&vec_of_three_backpacks[0], &vec_of_three_backpacks[1], &vec_of_three_backpacks[2]);
+            vec_of_three_backpacks.clear();
+        }
     }
     return sum_of_score;
 }
 
-fn main() {
+fn main() 
+{
     // print!("{}", get_answer_to_day_one());
     //println!("{}", get_answer_to_day_two());
     println!("{}", get_answer_to_day_three());
