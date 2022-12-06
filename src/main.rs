@@ -49,14 +49,27 @@ enum RPS
     Default=99
 }
 
+impl RPS 
+{
+    fn from_i32(value: i32) -> RPS 
+    {
+        match value {
+            1 => RPS::Rock,
+            2 => RPS::Paper,
+            3 => RPS::Scissor,
+            _ => panic!("Unknown value: {}", value),
+        }
+    }
+}
+
 fn convert_input_to_score(oponent: &String, me: &String) -> i32
 {
     let look_up_table = vec![("A".to_string(), "X".to_string(), RPS::Rock),
                                                          ("B".to_string(), "Y".to_string(), RPS::Paper),
                                                          ("C".to_string(), "Z".to_string(), RPS::Scissor)];
 
-    let mut oponents_move = RPS::Default;
     let mut own_move = RPS::Default;
+    let mut oponents_move = RPS::Default;
     for ele in look_up_table
     {
         if &ele.0 == oponent
@@ -68,6 +81,37 @@ fn convert_input_to_score(oponent: &String, me: &String) -> i32
             own_move = ele.2;
         }
     }
+
+    if own_move as i32 == RPS::Rock as i32
+    {
+        // Lose
+        let new_move = oponents_move as i32 - 1;
+        if new_move <= 0
+        {
+            own_move = RPS::from_i32(3);
+        }
+        else {
+            own_move = RPS::from_i32(new_move);
+        }
+    }
+    else if own_move as i32 == RPS::Paper as i32
+    {
+        // Draw
+        own_move = oponents_move;
+    }
+    else if own_move as i32 == RPS::Scissor as i32
+    {
+        // Win
+        let new_move = oponents_move as i32 + 1;
+        if new_move > 3
+        {
+            own_move = RPS::from_i32(1);
+        }
+        else {
+            own_move = RPS::from_i32(new_move);
+        }
+    }
+
     if own_move as i32 == oponents_move as i32
     {
         // println!("draw");
@@ -88,12 +132,6 @@ fn convert_input_to_score(oponent: &String, me: &String) -> i32
         // println!("own looses");
         return own_move as i32;
     }
-
-
-    // println!("own{}", own_move as i32);
-    // println!("diff: {}", oponents_move as i32 - own_move as i32);
-    
-    // println!("{}, {}", oponent, me );
 }
 
 fn get_answer_to_day_two() -> i32
