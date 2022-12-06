@@ -149,8 +149,49 @@ fn get_answer_to_day_two() -> i32
     return sum_of_score;
 }
 
+fn get_count_of_compartments(compartment_a: &String, compartment_b: &String) -> i32
+{
+    let a: Vec<_> = compartment_a.chars().collect();
+    let mut ret_val: i32 = 0;
+    for ele in a
+    {
+        if compartment_b.contains(ele)
+        {
+            if ele.is_uppercase()
+            {
+                ret_val = ele as i32 - 38;
+            }
+            else
+            {
+                ret_val = ele as i32 - 96;
+            }
+            break;
+        }
+
+    }
+    return ret_val;
+}
+
+fn get_answer_to_day_three() -> i32
+{
+    let filename = "input/level3.txt";
+    let file = File::open(filename).unwrap();
+    let reader = BufReader::new(file);
+    let mut sum_of_score = 0;
+    for(_, line) in reader.lines().enumerate()
+    {
+        let line_str = line.unwrap();
+        let line_splitted = line_str.split_at((line_str.len()/2));
+        let compartment_a = line_splitted.0;
+        let compartment_b = line_splitted.1;
+        sum_of_score = sum_of_score + get_count_of_compartments(&compartment_a.to_string(), &compartment_b.to_string());
+    }
+    return sum_of_score;
+}
+
 fn main() {
     // print!("{}", get_answer_to_day_one());
-    println!("{}", get_answer_to_day_two());
+    //println!("{}", get_answer_to_day_two());
+    println!("{}", get_answer_to_day_three());
 }
 
